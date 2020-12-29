@@ -1,0 +1,23 @@
+# Synchronize code to the shared Docker volume via the Mutagen service.
+sync:
+  defaults:
+    flushOnCreate: true
+    permissions:
+      defaultFileMode: 664
+      defaultDirectoryMode: 775
+    ignore:
+      vcs: true
+  drupaldistribution:
+    alpha: "."
+    beta: "docker://drupal9_nginx/var/www/html"
+    mode: "two-way-resolved"
+    ignore:
+      paths:
+        - "mutagen.yml"
+        - "mutagen.yml.lock"
+#        - ".vagrant"
+        - ".git"
+        - ".idea"
+#        - "deploy"
+        - "node_modules"
+#        - "example_frontend/.nuxt"
