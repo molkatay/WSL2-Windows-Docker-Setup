@@ -21,7 +21,6 @@
 /.idea/
 
 # Ignore .env files as they are personal
-/.env
 /.csslintrc
 /.eslintignore
 /.eslintrc.json
