@@ -9,7 +9,7 @@ sync:
       vcs: true
   drupaldistribution:
     alpha: "."
-    beta: "docker://drupal9_nginx/var/www/html"
+    beta: "docker://dockerdrupal_web_1/var/www/html"
     mode: "two-way-resolved"
     ignore:
       paths:
