@@ -28,8 +28,7 @@ services:
       - POSTGRES_DB=drupal
     ports:
       - "5433:5432"
-      volumes:
-        - ./pgdata:/var/lib/postgresql/data
-
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
 volumes:
   pgdata:
