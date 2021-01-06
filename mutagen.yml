@@ -5,9 +5,11 @@ sync:
     permissions:
       defaultFileMode: 664
       defaultDirectoryMode: 775
+      defaultOwner: molka
+
     ignore:
       vcs: true
-  drupaldistribution:
+  dockerdrupal:
     alpha: "."
     beta: "docker://dockerdrupal_web_1/var/www/html"
     mode: "two-way-resolved"
@@ -15,7 +17,6 @@ sync:
       paths:
         - "mutagen.yml"
         - "mutagen.yml.lock"
-#        - ".vagrant"
         - ".git"
         - ".idea"
 #        - "deploy"

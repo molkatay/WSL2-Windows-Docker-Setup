@@ -33,6 +33,8 @@ RUN docker-php-ext-install \
     ftp \
     bcmath \
     zip
+RUN apt-get update && apt-get install -y libpq-dev && docker-php-ext-install pdo pdo_pgsql
+
 
 RUN cd /usr/src && \
     curl -sS http://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
@@ -44,6 +46,13 @@ RUN echo "upload_max_filesize = 500M\n" \
          > /usr/local/etc/php/conf.d/maxsize.ini
 
 RUN chown -R www-data:www-data $HOME/.composer/
+
+RUN sudo usermod -aG www-data molka
+
+RUN sudo chown -R www-data:www-data /var/www
+
+RUN sudo chmod -R 775 /var/www
+
 
 USER www-data
 WORKDIR /var/www/html
