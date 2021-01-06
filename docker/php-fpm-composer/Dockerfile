@@ -34,26 +34,35 @@ RUN docker-php-ext-install \
     bcmath \
     zip
 RUN apt-get update && apt-get install -y libpq-dev && docker-php-ext-install pdo pdo_pgsql
-
-
-RUN cd /usr/src && \
-    curl -sS http://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
-
 ADD xdebug.ini  /etc/php7.3/conf.d/
 
 RUN echo "upload_max_filesize = 500M\n" \
          "post_max_size = 500M\n" \
          > /usr/local/etc/php/conf.d/maxsize.ini
 
-RUN chown -R www-data:www-data $HOME/.composer/
+# composer install
+ENV COMPOSER_HOME /composer
+ENV PATH /composer/vendor/bin:$PATH
+ENV COMPOSER_ALLOW_SUPERUSER 1
 
-RUN sudo usermod -aG www-data molka
+COPY --from=composer /usr/bin/composer /usr/bin/composer
+# git, zip & unzip tools
+RUN apt-get update -y && apt-get install -y git zip unzip && rm -rf /var/lib/apt/lists/*
 
-RUN sudo chown -R www-data:www-data /var/www
+RUN mkdir -p "$COMPOSER_HOME/cache" \
+&& mkdir -p "$COMPOSER_HOME/vendor" \
+&& chown -R www-data:www-data $COMPOSER_HOME \
+&& chown -R www-data:www-data /var/www
 
-RUN sudo chmod -R 775 /var/www
-
-
+# fixuid
+ADD fixuid.tar.gz /usr/local/bin
+RUN chown root:root /usr/local/bin/fixuid && \
+    chmod 4755 /usr/local/bin/fixuid && \
+    mkdir -p /etc/fixuid
+COPY fixuid.yml /etc/fixuid/config.yml
 USER www-data
-WORKDIR /var/www/html
-VOLUME /var/www/html
+
+VOLUME /composer/cache
+
+
+
