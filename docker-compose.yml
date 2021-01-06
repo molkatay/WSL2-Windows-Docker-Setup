@@ -75,4 +75,10 @@ services:
       - 'node-npm-packages:/home/node/.npm-packages'
     user: '${USER_ID}:${GROUP_ID}'
 volumes:
-  pgdata:
+  pgdata: null
+  php-composer-cache: null
+  php-composer-vendor: null
+  db-data: null
+  node-cache: null
+  node-npm-packages: null
+  solr-data: null
