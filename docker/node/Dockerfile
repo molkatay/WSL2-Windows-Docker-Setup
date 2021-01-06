@@ -3,12 +3,6 @@ FROM node:14
 # Mise à jour de npm
 RUN npm i --global npm
 
-# fixuid
-ADD fixuid.tar.gz /usr/local/bin
-RUN chown root:root /usr/local/bin/fixuid && \
-    chmod 4755 /usr/local/bin/fixuid && \
-    mkdir -p /etc/fixuid
-COPY fixuid.yml /etc/fixuid/config.yml
 
 WORKDIR /app
 
@@ -21,5 +15,3 @@ ENV PATH="${PATH}:/home/node/.npm-packages/bin"
 
 VOLUME /app
 VOLUME /home/node/.cache
-ENTRYPOINT ["fixuid","-q"]
-CMD null
