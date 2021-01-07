@@ -9,7 +9,6 @@ services:
       - ./docker/server.conf:/etc/nginx/nginx.conf:ro
       - ./docker/site.conf:/etc/nginx/conf.d/default.conf:ro
       - ./:/var/www/html:cached
-    user: '${USER_ID}:${GROUP_ID}'
     labels:
       - "traefik.http.routers.${PROJECT_NAME}_nginx.rule=Host(`${PROJECT_BASE_URL}`)"
   php:
@@ -18,7 +17,7 @@ services:
       - "9000:9000"
     volumes:
       - ./:/var/www/html:cached
-    user: '${USER_ID}:${GROUP_ID}'
+#    user: '${USER_ID}:${GROUP_ID}'
 
   database:
     image: postgres:alpine
@@ -28,7 +27,7 @@ services:
       - POSTGRES_PASSWORD=drupal
       - POSTGRES_DB=drupal
       - PGDATA=/var/lib/postgresql/data/pgdata
-    user: '${USER_ID}:${GROUP_ID}'
+
     ports:
       - "5432:5432"
     volumes:
@@ -42,7 +41,7 @@ services:
     environment:
       CRONTAB: "0 * * * * drush -r /var/www/html/web cron"
     command: sudo -E LD_PRELOAD=/usr/lib/preloadable_libiconv.so crond -f -d 0
-    user: '${USER_ID}:${GROUP_ID}'
+#    user: '${USER_ID}:${GROUP_ID}'
     volumes:
       - ./:/var/www/html:cached
   mailhog:
@@ -60,7 +59,7 @@ services:
     #    - '8080:8080' # Dashboard
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    user: '${USER_ID}:${GROUP_ID}'
+
   node:
     build:
       context: ./docker/node
@@ -73,12 +72,11 @@ services:
       - './:/app'
       - 'node-cache:/home/node/.cache'
       - 'node-npm-packages:/home/node/.npm-packages'
-    user: '${USER_ID}:${GROUP_ID}'
+
 volumes:
-  pgdata: null
+  pgdata:
   php-composer-cache: null
   php-composer-vendor: null
-  db-data: null
   node-cache: null
   node-npm-packages: null
-  solr-data: null
+ 
