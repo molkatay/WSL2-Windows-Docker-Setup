@@ -43,7 +43,7 @@ services:
     command: sudo -E LD_PRELOAD=/usr/lib/preloadable_libiconv.so crond -f -d 0
 #    user: '${USER_ID}:${GROUP_ID}'
     volumes:
-      - ./:/var/www/html:cached
+      - ./:/var/www/html
   mailhog:
     image: mailhog/mailhog
     labels:
@@ -66,10 +66,17 @@ services:
       cache_from:
         - 'node:14'
     image: 'node:14'
+    working_dir: /var/www/html/web/themes/custom/web_ui
+    labels:
+    - "traefik.http.services.${PROJECT_NAME}_node.loadbalancer.server.port=3000"
+    - "traefik.http.routers.${PROJECT_NAME}_node.rule=Host(`node.${PROJECT_BASE_URL}`)"
+    expose:
+    - "3000"
+    command: sh -c 'npm install && npm run start'
     init: true
-    restart: 'no'
+    restart: 'always'
     volumes:
-      - './:/app'
+      - ./:/var/www/html:cached
       - 'node-cache:/home/node/.cache'
       - 'node-npm-packages:/home/node/.npm-packages'
 
@@ -79,4 +86,4 @@ volumes:
   php-composer-vendor: null
   node-cache: null
   node-npm-packages: null
- 
+
